@@ -16,9 +16,9 @@ router.post("/nuevocliente", async(req,res)=>{
 });
 
 
-router.post("/listaclientes", async(req,res)=>{
+router.get("/listaclientes", async(req,res)=>{
 
-    const{sucursal,codven,visita} = req.body;
+    const{sucursal,codven,visita} = req.query;
 
     let qry = `SELECT ME_CENSO.CODSUCURSAL, ME_CENSO.CODVEN, ME_CENSO.FECHA, ME_CENSO.CODCLIE, ME_CENSO.NITCLIE, ME_CENSO.NEGOCIO, ME_CENSO.NOMCLIE, ME_CENSO.DIRCLIE, ME_CENSO.CODMUN, 
     ME_CENSO.CODDEPTO, ME_CENSO.REFERENCIA, ME_CENSO.OBS, ME_CENSO.VISITA, ME_CENSO.LAT, ME_CENSO.LONG, ME_CENSO.TELEFONO, ME_Municipios.DESMUNI AS MUNICIPIO, ME_Departamentos.DESDEPTO AS DEPARTAMENTO
@@ -31,9 +31,9 @@ router.post("/listaclientes", async(req,res)=>{
      
 });
 
-router.post("/datoscliente", async(req,res)=>{
+router.get("/datoscliente", async(req,res)=>{
 
-    const{sucursal,codven,codclie} = req.body;
+    const{sucursal,codven,codclie} = req.query;
 
     let qry = `SELECT * FROM ME_CENSO WHERE CODSUCURSAL='${sucursal}' AND CODVEN=${codven} AND CODCLIE='${codclie}'; `
 
@@ -65,9 +65,9 @@ router.post("/deletecliente", async(req,res)=>{
 });
 
 
-router.post("/municipios", async(req,res)=>{
+router.get("/municipios", async(req,res)=>{
 
-    const{sucursal} = req.body;
+    const{sucursal} = req.query;
 
     let qry = `SELECT CODMUNI, DESMUNI FROM ME_MUNICIPIOS WHERE CODSUCURSAL='${sucursal}'; `
 
@@ -75,9 +75,9 @@ router.post("/municipios", async(req,res)=>{
      
 });
 
-router.post("/departamentos", async(req,res)=>{
+router.get("/departamentos", async(req,res)=>{
 
-    const{sucursal} = req.body;
+    const{sucursal} = req.query;
 
     let qry = `SELECT CODDEPTO, DESDEPTO FROM ME_DEPARTAMENTOS WHERE CODSUCURSAL='${sucursal}'; `
 

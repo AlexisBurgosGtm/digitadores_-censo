@@ -1,7 +1,32 @@
-﻿var socket = io();
+﻿//var socket = io();
+
+let root = document.getElementById('root');
+let GlobalCodUsuario = 0;
+let GlobalCodSucursal = 'ME-PETEN';
+let GlobalLoader  = `<div class="spinner-grow text-primary" role="status">
+                      <span class="sr-only">Loading...</span>
+                      </div>
+                      <div class="spinner-grow text-secondary" role="status">
+                      <span class="sr-only">Loading...</span>
+                      </div>
+                      <div class="spinner-grow text-success" role="status">
+                      <span class="sr-only">Loading...</span>
+                      </div>
+                      <div class="spinner-grow text-danger" role="status">
+                      <span class="sr-only">Loading...</span>
+                      </div>
+                      <div class="spinner-grow text-warning" role="status">
+                      <span class="sr-only">Loading...</span>
+                      </div>
+                      <div class="spinner-grow text-info" role="status">
+                      <span class="sr-only">Loading...</span>
+                      </div>`;
 
 //inicializa la instalacion de la app
 funciones.instalationHandlers('btnInstalarApp');
+
+
+
 
 function InicializarServiceWorkerNotif(){
   if ('serviceWorker' in navigator) {
@@ -12,61 +37,31 @@ function InicializarServiceWorkerNotif(){
   };
 
   requestPermission();
-}
+};
 
 if ('Notification' in window) {};
 
 function requestPermission() {
   if (!('Notification' in window)) {
-    alert('Notification API not supported!');
+    //alert('Notification API not supported!');
     return;
   }
   
   Notification.requestPermission(function (result) {
     //$status.innerText = result;
   });
-}
+};
 
 InicializarServiceWorkerNotif();
 
-// LISTENER DE LOS BOTONES DEL MENU
-let btnMenuInicioSalir = document.getElementById('btnMenuInicioSalir');
-btnMenuInicioSalir.addEventListener('click',()=>{
-    classNavegar.login();
-});
 
-// LISTENER DEL BOTON PARA CERRAR EL MODAL DEL MENU LATERAL
-let btnCerrarModalMenuLateral = document.getElementById('btnCerrarModalMenuLateral');
-btnCerrarModalMenuLateral.addEventListener('click',()=>{
-  $('#modalMenu').modal('hide');
-})
 
-classNavegar.login();
 
-//
-// DESHABILITA EL PULL TO REFRESH
+// inicializa la vista del censo
+funciones.loadScript('./views/censo.js','root')
+    .then(()=>{
+          iniciarVistaCenso();
+      });
 
-var lastTouchY = 0;
-var preventPullToRefresh = false;
 
-$('body').on('touchstart', function(e) {
-    if (e.originalEvent.touches.length != 1) {
-        return;
-    }
-    lastTouchY = e.originalEvent.touches[0].clientY;
-    preventPullToRefresh = window.pageYOffset == 0;
-});
 
-$('body').on('touchmove', function(e) {
-    var touchY = e.originalEvent.touches[0].clientY;
-    var touchYDelta = touchY - lastTouchY;
-    lastTouchY = touchY;
-    if (preventPullToRefresh) {
-        // To suppress pull-to-refresh it is sufficient to preventDefault the first overscrolling touchmove.
-        preventPullToRefresh = false;
-        if (touchYDelta > 0) {
-            e.preventDefault();
-            return;
-        }
-    }
-});

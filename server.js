@@ -4,22 +4,15 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 
 const execute = require('./router/connection');
-var routerNoticias = require('./router/routerNoticias');
-var routerVentas = require('./router/routerVentas');
 var routerSucursales = require('./router/routerSucursales');
-let routerRepartidor = require('./router/routerRepartidor');
 var routerTipoDocs = require('./router/routerTipoDocs');
-var routerEmpleados = require('./router/routerEmpleados');
-var routerClientes = require('./router/routerClientes');
-var routerProductos = require('./router/routerProductos');
-let routerDigitacion = require('./router/routerDigitacion');
 let routerUsuarios = require('./router/routerUsuarios');
 let routerCenso = require('./router/routerCenso');
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-const PORT = process.env.PORT || 777;
+const PORT = process.env.PORT || 9900;
 
 app.use(bodyParser.json());
 
@@ -52,32 +45,11 @@ app.get("/",function(req,res){
 //Router para SUCURSALES
 app.use('/sucursales', routerSucursales);
 
-//Router para app NOTICIAS
-app.use('/noticias', routerNoticias);
-
 //Router para app CENSO
 app.use('/censo', routerCenso);
 
-//Router para app VENTAS
-app.use('/ventas', routerVentas);
-
-//Router para app REPARTIDOR
-app.use('/repartidor', routerRepartidor);
-
 // Router para Tipodocumentos
 app.use('/tipodocumentos', routerTipoDocs);
-
-// Router para empleados o vendedores
-app.use('/empleados', routerEmpleados);
-
-// Router para clientes
-app.use('/clientes', routerClientes);
-
-// Router para productos
-app.use('/productos', routerProductos);
-
-// Router para digitacion
-app.use('/digitacion', routerDigitacion);
 
 // Router para usuarios
 app.use('/usuarios', routerUsuarios);
@@ -95,28 +67,6 @@ app.use("*",function(req,res){
 // SOCKET HANDLER
 io.on('connection', function(socket){
   
-  socket.on('noticias nueva', (msg,usuario)=>{
-    io.emit('noticias nueva', msg,usuario);
-  });
-
-  socket.on('productos precio', function(msg,usuario){
-	  io.emit('productos precio', msg, usuario);
-  });
-
-  socket.on('productos bloqueado', function(msg,usuario){
-	  io.emit('productos bloqueado', msg, usuario);
-  });
-
-  socket.on('ventas nueva', (msg,usuario)=>{
-    io.emit('ventas nueva', msg,usuario);
-  })
-
-  // sucede cuando el repartidor marca un pedido y notifica a su respectivo vendedor
-  socket.on('reparto pedidomarcado', (msg,status,vendedor)=>{
-    io.emit('reparto pedidomarcado', msg,status,vendedor);
-  })
-
-
   socket.on('chat msn', function(msg,status,user){
 	  io.emit('chat msn', msg, status, user);
   });
