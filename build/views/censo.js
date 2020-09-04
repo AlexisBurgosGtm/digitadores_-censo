@@ -585,9 +585,11 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
     let tblfoot = `</tbody></table></div>`;
 
     axios.get('/censo/listaclientes', {
-        sucursal: sucursal,
-        codven:codven,
-        visita:visita
+        params:{
+            sucursal: sucursal,
+            codven:codven,
+            visita:visita
+        }
     })
     .then((response) => {
         const data = response.data.recordset;
@@ -655,7 +657,9 @@ function getComboMunicipios(idContainer){
     let strdata = '';
     
     axios.get('/censo/municipios', {
-        sucursal: GlobalCodSucursal
+        params:{
+            sucursal: GlobalCodSucursal
+        }
     })
     .then((response) => {
         const data = response.data.recordset;
@@ -673,7 +677,9 @@ function getComboDepartamentos(idContainer){
     let strdata = '';
     
     axios.get('/censo/departamentos', {
-        sucursal: GlobalCodSucursal
+        params:{
+            sucursal: GlobalCodSucursal
+        }
     })
     .then((response) => {
         const data = response.data.recordset;       
