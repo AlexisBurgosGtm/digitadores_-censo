@@ -60,7 +60,7 @@ InicializarServiceWorkerNotif();
 // inicializa la vista del censo
 funciones.loadScript('./views/censo.js','root')
     .then(()=>{
-          iniciarVistaCenso();
+        iniciarVistaVendedorCenso();
       });
 
 
