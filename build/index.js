@@ -1,7 +1,7 @@
 ﻿//var socket = io();
 
 let root = document.getElementById('root');
-let GlobalCodUsuario = 0;
+let GlobalCodUsuario = 100;
 let GlobalCodSucursal = 'ME-PETEN';
 let GlobalLoader  = `<div class="spinner-grow text-primary" role="status">
                       <span class="sr-only">Loading...</span>

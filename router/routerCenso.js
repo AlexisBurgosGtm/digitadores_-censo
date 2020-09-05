@@ -4,10 +4,11 @@ const router = express.Router();
 
 router.post("/nuevocliente", async(req,res)=>{
 
-    const{sucursal,codven,fecha,codclie,nitclie,negocio,nomclie,dirclie,codmun,coddepto,referencia,obs,telefono,visita,lat,long} = req.body;
+    const{sucursal,codven,fecha,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,codmun,coddepto,referencia,obs,telefono,visita,lat,long} = req.body;
 
-    let qry = `INSERT INTO ME_CENSO (CODSUCURSAL,CODVEN,FECHA,CODCLIE,NITCLIE,NEGOCIO,NOMCLIE,DIRCLIE,REFERENCIA,CODMUN,CODDEPTO,OBS,VISITA,LAT,LONG,TELEFONO)
-    VALUES ('${sucursal}',${codven},'${fecha}',${codclie},'${nitclie}','${negocio}','${nomclie}','${dirclie}','${referencia}','${codmun}','${coddepto}','${obs}','${visita}',${lat},${long},'${telefono}');`
+    let qry = `INSERT INTO ME_CENSO (
+            CODSUCURSAL,   CODVEN,     FECHA, CODCLIE,NITCLIE,TIPONEGOCIO,NEGOCIO,NOMCLIE,DIRCLIE,REFERENCIA,CODMUN,CODDEPTO,OBS,VISITA,LAT,LONG,TELEFONO)
+    VALUES ('${sucursal}',${codven},'${fecha}',0,'${nitclie}','${tiponegocio}','${negocio}','${nomclie}','${dirclie}','${referencia}','${codmun}','${coddepto}','${obs}','${visita}',${lat},${long},'${telefono}');`
     
     console.log(qry);
     
@@ -20,7 +21,7 @@ router.get("/listaclientes", async(req,res)=>{
 
     const{sucursal,codven,visita} = req.query;
 
-    let qry = `SELECT ME_CENSO.CODSUCURSAL, ME_CENSO.CODVEN, ME_CENSO.FECHA, ME_CENSO.CODCLIE, ME_CENSO.NITCLIE, ME_CENSO.NEGOCIO, ME_CENSO.NOMCLIE, ME_CENSO.DIRCLIE, ME_CENSO.CODMUN, 
+    let qry = `SELECT ME_CENSO.CODSUCURSAL, ME_CENSO.CODVEN, ME_CENSO.FECHA, ME_CENSO.ID AS CODCLIE, ME_CENSO.NITCLIE,ME_CENSO.TIPONEGOCIO, ME_CENSO.NEGOCIO, ME_CENSO.NOMCLIE, ME_CENSO.DIRCLIE, ME_CENSO.CODMUN, 
     ME_CENSO.CODDEPTO, ME_CENSO.REFERENCIA, ME_CENSO.OBS, ME_CENSO.VISITA, ME_CENSO.LAT, ME_CENSO.LONG, ME_CENSO.TELEFONO, ME_Municipios.DESMUNI AS MUNICIPIO, ME_Departamentos.DESDEPTO AS DEPARTAMENTO
     FROM ME_CENSO LEFT OUTER JOIN
     ME_Departamentos ON ME_CENSO.CODDEPTO = ME_Departamentos.CODDEPTO AND ME_CENSO.CODSUCURSAL = ME_Departamentos.CODSUCURSAL LEFT OUTER JOIN
@@ -43,12 +44,12 @@ router.get("/datoscliente", async(req,res)=>{
 
 router.post("/editarcliente", async(req,res)=>{
 
-    const{sucursal,codven,fecha,codclie,nitclie,negocio,nomclie,dirclie,referencia,codmun,coddepto,obs,visita,lat,long,telefono} = req.body;
+    const{sucursal,codven,fecha,codclie,nitclie,tiponegocio,negocio,nomclie,dirclie,referencia,codmun,coddepto,obs,visita,lat,long,telefono} = req.body;
 
-    let qry = `UPDATE ME_CENSO SET CODVEN=${codven},FECHA='${fecha}',NITCLIE='${nitclie}',NEGOCIO='${negocio}',NOMCLIE='${nomclie}',
+    let qry = `UPDATE ME_CENSO SET CODVEN=${codven},FECHA='${fecha}',NITCLIE='${nitclie}',TIPONEGOCIO='${tiponegocio}',NEGOCIO='${negocio}',NOMCLIE='${nomclie}',
     TELEFONO='${telefono}',DIRCLIE='${dirclie}',CODMUN='${codmun}',CODDEPTO='${coddepto}', 
     REFERENCIA='${referencia}',OBS='${obs}',VISITA='${visita}',LAT=${lat},LONG=${long}
-     WHERE CODSUCURSAL='${sucursal}' AND CODCLIE=${codclie}; `
+     WHERE CODSUCURSAL='${sucursal}' AND ID=${codclie}; `//CODCLIE=${codclie}; 
 
      execute.Query(res,qry);
      
