@@ -237,7 +237,13 @@ async function addListeners(){
 
     cmbDiaVisita.addEventListener('change',async ()=>{
         cmbVisitaCliente.value = cmbDiaVisita.value;
-        fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+        //fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+        if(cmbTipoLista.value == 'NOENVIADOS'){
+            classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+        }else{
+            fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+        }
+        
     });
 
     let btnNuevoClienteUbicacion = document.getElementById('btnNuevoClienteUbicacion');
@@ -302,6 +308,8 @@ async function addListeners(){
 
     let btnGuardar = document.getElementById('btnGuardar');
     btnGuardar.addEventListener('click',()=>{
+        let cmbTipoLista = document.getElementById('cmbTipoLista');
+
         if(GlobalBool==false){
 
             document.getElementById('btnGuardar').innerHTML = GlobalLoader; //   <i class="fal fa-save"></i>Guardar
@@ -317,7 +325,9 @@ async function addListeners(){
                             GlobalBool = false;
                             document.getElementById('btnTabListado').click();
                             fcnCleanDataCliente();
-                            fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                            //fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                            classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+
                             funciones.Aviso('Cliente Creado exitosamente!!');
                             document.getElementById('btnGuardar').innerHTML = '<i class="fal fa-save"></i>Guardar';
                         })
@@ -348,7 +358,9 @@ async function addListeners(){
                         GlobalBool = false;
                         document.getElementById('btnTabListado').click();
                         fcnCleanDataCliente();
-                        fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                        //fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                        classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+
                         funciones.Aviso('Cliente Editado exitosamente!!');
                         document.getElementById('txtCodigo').disabled = false;
                     })
@@ -420,6 +432,57 @@ function fcnGuardarCliente(){
         let txtLatitud = document.getElementById('txtLatitud');
         let txtLongitud = document.getElementById('txtLongitud');
 
+        let data = {
+            CODSUCURSAL: GlobalCodSucursal,
+            CODVEN: Number(cmbVendedor.value),
+            FECHA: funciones.getFecha(),
+            CODCLIE: Number(txtCodigo.value),
+            TIPONEGOCIO: cmbTipoNegocio.value,
+            NITCLIE:txtNit.value,
+            NEGOCIO: funciones.quitarCaracteres(txtNegocio.value,'"'," pulg",true),
+            NOMCLIE: funciones.quitarCaracteres(txtNomcliente.value,'"'," pulg",true), 
+            DIRCLIE: funciones.quitarCaracteres(txtDircliente.value,'"'," pulg",true), 
+            CODMUNI: cmbMunicipio.value,
+            CODDEPTO: cmbDepartamento.value,
+            REFERENCIA: funciones.quitarCaracteres(txtReferencia.value,'"'," pulg",true), 
+            OBS: funciones.quitarCaracteres(txtObs.value,'"'," pulg",true), 
+            TELEFONO: txtTelefono.value,
+            VISITA: cmbVisitaCliente.value,
+            LAT: Number(txtLatitud.innerText),
+            LONG: Number(txtLongitud.innerText)
+        };
+
+        classDb.InsertCliente(data)
+        .then(()=>{
+            resolve();
+        })
+        .catch(()=>{
+            reject();
+        })
+
+
+    });
+};
+
+function fcnGuardarClienteOLD(){  
+    
+    return new Promise((resolve,reject)=>{
+        let txtNit = document.getElementById('txtNit');
+        let cmbTipoNegocio = document.getElementById('cmbTipoNegocio');
+        let txtCodigo = document.getElementById('txtCodigo');
+        let cmbVisitaCliente = document.getElementById('cmbVisitaCliente');
+        let txtNegocio = document.getElementById('txtNegocio'); 
+        let txtNomcliente = document.getElementById('txtNomcliente');
+        let txtDircliente = document.getElementById('txtDircliente');
+        let txtReferencia = document.getElementById('txtReferencia');
+        let cmbMunicipio = document.getElementById('cmbMunicipio');
+        let cmbDepartamento = document.getElementById('cmbDepartamento');
+        let cmbVendedor = document.getElementById('cmbVendedor');
+        let txtTelefono = document.getElementById('txtTelefono');
+        let txtObs = document.getElementById('txtObs');
+        let txtLatitud = document.getElementById('txtLatitud');
+        let txtLongitud = document.getElementById('txtLongitud');
+
         axios.post('/censo/nuevocliente',{
             sucursal:GlobalCodSucursal,
             codven:cmbVendedor.value,
@@ -456,8 +519,58 @@ function fcnGuardarCliente(){
     });
 };
 
+
+//EditCliente
 function fcnEditarCliente(){  
     
+    return new Promise((resolve,reject)=>{
+        let txtNit = document.getElementById('txtNit');
+        let txtCodigo = document.getElementById('txtCodigo');
+        let cmbVisitaCliente = document.getElementById('cmbVisitaCliente');
+        let cmbTipoNegocio = document.getElementById('cmbTipoNegocio');
+        let txtNegocio = document.getElementById('txtNegocio'); 
+        let txtNomcliente = document.getElementById('txtNomcliente');
+        let txtDircliente = document.getElementById('txtDircliente');
+        let txtReferencia = document.getElementById('txtReferencia');
+        let cmbMunicipio = document.getElementById('cmbMunicipio');
+        let cmbDepartamento = document.getElementById('cmbDepartamento');
+        let cmbVendedor = document.getElementById('cmbVendedor');
+        let txtTelefono = document.getElementById('txtTelefono');
+        let txtObs = document.getElementById('txtObs');
+        let txtLatitud = document.getElementById('txtLatitud');
+        let txtLongitud = document.getElementById('txtLongitud');
+
+        let data = {
+            CODVEN:Number(cmbVendedor.value),
+            NITCLIE:txtNit.value,
+            TIPONEGOCIO:cmbTipoNegocio.value,
+            NEGOCIO: funciones.quitarCaracteres(txtNegocio.value,'"'," pulg",true),
+            NOMCLIE: funciones.quitarCaracteres(txtNomcliente.value,'"'," pulg",true), 
+            DIRCLIE: funciones.quitarCaracteres(txtDircliente.value,'"'," pulg",true), 
+            CODMUNI:cmbMunicipio.value,
+            CODDEPTO:cmbDepartamento.value,
+            REFERENCIA: funciones.quitarCaracteres(txtReferencia.value,'"'," pulg",true), 
+            OBS: funciones.quitarCaracteres(txtObs.value,'"'," pulg",true), 
+            TELEFONO:txtTelefono.value,
+            VISITA:cmbVisitaCliente.value,
+            LAT:txtLatitud.innerText,
+            LONG:txtLongitud.innerText
+        };
+    
+        classDb.EditCliente(data,Number(txtCodigo.text))
+        .then(()=>{
+            resolve();
+        })
+        .catch(()=>{
+            reject();
+        })
+
+    });
+};
+
+function fcnEditarClienteOLD(){  
+    funciones.AvisoError('Estamos trabajando en la edición del cliente')
+    return;
     return new Promise((resolve,reject)=>{
         let txtNit = document.getElementById('txtNit');
         let txtCodigo = document.getElementById('txtCodigo');

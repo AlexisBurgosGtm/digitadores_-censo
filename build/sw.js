@@ -43,6 +43,12 @@ self.addEventListener('install', function(evt) {
 self.addEventListener('fetch', function(evt) {
 
   var req = evt.request.clone();
+  if (req.clone().method == "GET") {
+    evt.respondWith(fromCache(evt.request));
+    evt.waitUntil(update(evt.request));
+  }
+
+  /*
   if (navigator.onLine){
     if (req.clone().method == "GET") {
       //evt.respondWith(fromCache(evt.request));
@@ -54,6 +60,7 @@ self.addEventListener('fetch', function(evt) {
       //evt.waitUntil(update(evt.request));
     }
   };
+  */
 
 });
 

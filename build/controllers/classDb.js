@@ -133,37 +133,53 @@ let classDb = {
         });
         
     },
-    InsertCliente: async (empnit,codven,nit,nombre,direccion,codmunicipio,coddepartamento,telefono,latitud,longitud,obs,negocio,concre)=>{
-            
-        var data = {
-            empnit:empnit,
-            codven:codven,
-            negocio:negocio,
-            giro: 'GENERAL',
-            nit:nit,
-            nomcliente:nombre,
-            dircliente:direccion,
-            codmun:codmunicipio,
-            coddep:coddepartamento,
-            telefono:telefono,
-            concre:concre,
-            latitud:latitud,
-            longitud:longitud,
-            obs:obs,
-            token:GlobalToken
-        };
+    InsertCliente: (data)=>{  
+        console.log(data);
 
-
-        DbConnection = new JsStore.Instance(DbName);
-        await DbConnection.insert({Into: "censo",Values: [data]},
-                function (rowsAdded) {
-                    funciones.Aviso('Cliente registrado exitosamente');
-                    classCenso.LimpiarCampos();
+        return new Promise(async(resolve, reject)=>{
+            DbConnection = new JsStore.Instance(DbName);
+            await DbConnection.insert({Into: "tempcenso",Values: [data]},
+            function (rowsAdded) {
+                funciones.Aviso('Cliente registrado exitosamente');
+                    resolve();        
                 }, 
                 function (err) {
-                    console.log(err);
-                    funciones.AvisoError('No se puedo Guardar este Cliente, error de base de datos');
+                        console.log(err);
+                        funciones.AvisoError('No se puedo Guardar este Cliente, error de base de datos');
+                        reject();
                 })
+        })
+        
+        
+    },
+    EditCliente: (data,id)=>{  
+        //console.log(data);
+
+        return new Promise(async(resolve, reject)=>{
+          
+            DbConnection.update({
+                In: "tempcenso",
+                Set: data,
+                Where: {
+                    ID: Number(id)
+                }
+            }, function (rowsAffected) {
+                //alert(rowsAffected + " rows Updated");
+                if (rowsAffected > 0) {
+                    funciones.Aviso('Cliente Actualizado Exitosamente');
+                    resolve();
+                }else{
+                    reject();
+                }
+            }, function (error) {
+                //alert(error.Message);
+                console.log(error.Message)
+                reject();
+            })
+
+
+        })
+        
         
     },
     DeleteCliente: (id)=>{
