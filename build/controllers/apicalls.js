@@ -72,11 +72,13 @@ let api = {
     },
     empleadosLogin : (sucursal,user,pass)=>{
         return new Promise((resolve,reject)=>{
-            axios.post('/empleados/login', {
-                app:GlobalSistema,
-                codsucursal: sucursal,
-                user:user,
-                pass:pass       
+            axios.get('/empleados/login', {
+                params: {
+                    app:GlobalSistema,
+                    codsucursal: sucursal,
+                    user:user,
+                    pass:pass     
+                }  
             })
             .then((response) => {
                 const data = response.data.recordset;
@@ -200,5 +202,34 @@ let api = {
             lbTotal.innerText = 'Q 0.00';
         });
            
+    },
+    comboVendedores : (sucursal,idContainer)=>{
+        let container = document.getElementById(idContainer);
+        let str = '';
+
+        return new Promise((resolve,reject)=>{
+            axios.get('/empleados/vendedores',  {
+                params: {
+                    sucursal: sucursal,
+                    user:GlobalUsuario
+                }
+            })
+            .then((response) => {
+                const data = response.data.recordset;
+                data.map((rows)=>{
+                    str = str + `<option value='${rows.CODIGO}'>
+                                    ${rows.NOMBRE}
+                                   Tel:<b class="text-danger">${rows.TELEFONO}</b>
+                                 </option>
+                                `        
+                })
+                container.innerHTML = str;
+                resolve();
+            }, (error) => {
+                funciones.AvisoError('Error en la solicitud');
+                container.innerHTML = '';
+                reject();
+            });
+        })
     }
 }

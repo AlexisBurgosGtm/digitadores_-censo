@@ -218,6 +218,15 @@ async function addListeners(){
     let cmbVisitaCliente = document.getElementById('cmbVisitaCliente');
     cmbVisitaCliente.innerHTML = cmbDiaVisita.innerHTML;
 
+    let cmbTipoLista = document.getElementById('cmbTipoLista');
+    cmbTipoLista.addEventListener('change', ()=>{
+        if(cmbTipoLista.value == 'NOENVIADOS'){
+            classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+        }else{
+            fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+        }
+    })
+
     let cmbTipoNegocio = document.getElementById('cmbTipoNegocio')
     cmbTipoNegocio.innerHTML = funciones.getComboTipoClientes();
 
@@ -274,7 +283,8 @@ async function addListeners(){
     });
 
     //carga el listado de clientes en el censo
-    fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+    //fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+    classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
 
     //carga la ubicación actual y general el mapa
     showUbicacion()
@@ -357,18 +367,7 @@ async function addListeners(){
 
     //VERIFICACION DE CÓDIGO DE CLIENTE
     let txtCodigo = document.getElementById('txtCodigo');
-    /*
-    txtCodigo.addEventListener('focusout',()=>{
-        verifyCodigoCliente(txtCodigo.value)
-        .then(()=>{
-            funciones.Aviso('Código de Cliente aprobado')
-        })
-        .catch(()=>{
-            funciones.AvisoError('Código ya existe o no se pudo Verificar');
-            document.getElementById('txtCodigo').focus();
-        })
-    })
-    */
+    
 
     await getComboMunicipios('cmbMunicipio');
     await getComboDepartamentos('cmbDepartamento');  
@@ -653,6 +652,7 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
                                 <td>Código/NIT</td>
                                 <td>Cliente/Dirección</td>
                                 <td>Teléfono</td>
+                                <td></td>
                             </tr>
                         </thead>
                         <tbody id="tblListado">`;
@@ -670,8 +670,7 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
         const data = response.data.recordset;
         
         data.map((rows)=>{
-                strdata = strdata + `<tr class="cursormano border-bottom"
-                ondblclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
+                strdata = strdata + `<tr class="cursormano border-bottom">
                     <td>${rows.NITCLIE}
                         <br>
                         <small>Código: <b>${rows.CODCLIE}</b> </small>
@@ -683,8 +682,13 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
                             <br class="border-bottom">
                         <small>${rows.DIRCLIE},${rows.MUNICIPIO}</small>
                     </td>
-
-                    <td>${rows.TELEFONO}
+                    <td>
+                        ${rows.TELEFONO}
+                    </td>
+                    <td>
+                        <button class="btn btn-warning btn-sm btn-circle" onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
+                            <i class="fal fa-edit"></i>Edit
+                        </button>
                     </td>
                 </tr>`
         })

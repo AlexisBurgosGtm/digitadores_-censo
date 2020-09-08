@@ -27,9 +27,9 @@ router.post("/statusempleado",async(req,res)=>{
     execute.Query(res,qry);
 });
 
-router.post("/login",async(req,res)=>{
+router.get("/login",async(req,res)=>{
 
-    const {app,codsucursal,user,pass} = req.body;
+    const {app,codsucursal,user,pass} = req.query;
 
     
     let qry ='';
@@ -47,23 +47,12 @@ router.get("/vendedores", async(req,res)=>{
     const {sucursal} = req.query;
         
     let qry =''; 
+    //qry = `SELECT CODVEN AS CODIGO, NOMVEN AS NOMBRE, ISNULL(TELEFONO,'00000000') AS TELEFONO, DESICONO AS TIPO FROM ME_VENDEDORES WHERE ACTIVO='SI' AND CODSUCURSAL='${sucursal}' ORDER BY NOMVEN`;     
     qry = `SELECT CODVEN AS CODIGO, NOMVEN AS NOMBRE, ISNULL(TELEFONO,'00000000') AS TELEFONO, DESICONO AS TIPO FROM ME_VENDEDORES WHERE ACTIVO='SI' AND CODSUCURSAL='${sucursal}' ORDER BY NOMVEN`;     
-    
     
     execute.Query(res,qry);
 
 });
 
-router.post("/vendedores", async(req,res)=>{
-    
-    const {sucursal} = req.body;
-        
-    let qry =''; 
-    qry = `SELECT CODVEN AS CODIGO, NOMVEN AS NOMBRE, ISNULL(TELEFONO,'00000000') AS TELEFONO, DESICONO AS TIPO FROM ME_VENDEDORES WHERE ACTIVO='SI' AND CODSUCURSAL='${sucursal}' ORDER BY NOMVEN`;     
-    
-    
-    execute.Query(res,qry);
-
-});
 
 module.exports = router;

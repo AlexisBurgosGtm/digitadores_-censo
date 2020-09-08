@@ -71,6 +71,7 @@ function getTbl() {
 let classDb = {
     SelectCenso: (dia,codven,idContainer)=>{
         let contenedor = document.getElementById(idContainer);
+        console.log('lectura de tabla tempcenso');
 
         let tbl = `<div class="table-responsive col-12">
         <table class="table table-responsive table-hover table-striped">
@@ -91,11 +92,11 @@ let classDb = {
         DbConnection.select({
             From: "tempcenso",
             Where: {
-                visita: dia,
-                codven: Number(codven)
+                VISITA: dia,
+                CODVEN: Number(codven)
             }
         }, function (clientes) {
-    
+            console.log(clientes);
             clientes.map((rows)=>{
                 str +=  `
                 <tr>
