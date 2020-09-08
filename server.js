@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 
 const execute = require('./router/connection');
 var routerSucursales = require('./router/routerSucursales');
-var routerTipoDocs = require('./router/routerTipoDocs');
+var routerEmpleados = require('./router/routerEmpleados');
 let routerUsuarios = require('./router/routerUsuarios');
 let routerCenso = require('./router/routerCenso');
 
@@ -32,7 +32,7 @@ router.use(function (req,res,next) {
         // Set to true if you need the website to include cookies in the requests sent
       res.setHeader('Access-Control-Allow-Credentials', true);
   */
-  console.log("/" + req.toString());
+  
   next();
 });
 
@@ -48,8 +48,8 @@ app.use('/sucursales', routerSucursales);
 //Router para app CENSO
 app.use('/censo', routerCenso);
 
-// Router para Tipodocumentos
-app.use('/tipodocumentos', routerTipoDocs);
+// Router para empleados o vendedores
+app.use('/empleados', routerEmpleados);
 
 // Router para usuarios
 app.use('/usuarios', routerUsuarios);

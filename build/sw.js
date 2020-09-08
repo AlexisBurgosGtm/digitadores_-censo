@@ -1,22 +1,34 @@
 
-var CACHE = 'censomefect';
+var CACHE = 'mercadosefectivoscenso';
 const staticAssets = [  
-  './css/btn.css',
+  './css/vendors.bundle.css',
+  './css/app.bundle.css',
+  './css/.../styles.css',
+  '././css/btn.css',
   './libs/leaflet/leaflet.css',
   './libs/noty/noty.min.css',
   './manifest.json',
+  './js/vendors.bundle.js',
+  './js/app.bundle.js',
+  './js/../script.js',
   './libs/noty/noty.min.js',
-    './libs/socket.io.js',
   './libs/sweetalert.min.js',
   './libs/axios.min.js',
   './libs/leaflet/leaflet.js',
-  './libs/JsStore.min.js',
+  //'./libs/JsStore.min.js',
+  './libs/jsstore.js',
+  './libs/jsstore.worker.js',
   './libs/funciones.js',
+  './controllers/classNavegar.js',
+  './controllers/GlobalVars.js',
+  './controllers/classDb.js',
+  './models/classEmpleados.js',
+  './controllers/apicalls.js',
   './index.js',
   './favicon.png',
   './index.html',
    './sw.js',
-   './views/censo.js',
+   './views/vendedor/censo.js',
    './views/login/index.js'
 ];
 
@@ -31,7 +43,7 @@ self.addEventListener('install', function(evt) {
 
 
 self.addEventListener('fetch', function(evt) {
-  
+
   var req = evt.request.clone();
   if (navigator.onLine){
     if (req.clone().method == "GET") {
@@ -43,10 +55,9 @@ self.addEventListener('fetch', function(evt) {
       evt.respondWith(fromCache(evt.request));
       //evt.waitUntil(update(evt.request));
     }
-  }
-  
+  };
+
 });
-  
 
 
 function fromCache(request) {

@@ -17,7 +17,7 @@ window.onload = function () {
     initiateDb();
 };
 //nombre de la base de datos
-const DbName = "mercadosefectivos-v1";
+const DbName = "mercadosefectivoscenso";
 
 function initiateDb() {
     
@@ -37,51 +37,173 @@ function initiateDb() {
 // define las tablas de la base de datos
 function getTbl() {
     //TABLA VENTAS TEMPORAL
-    var TblTemp = {
-        Name: "tempVentas",
-        Columns: [{ Name: "Id", PrimaryKey: true, AutoIncrement: true},
-            { Name: "empnit", DataType: "string" },
-            { Name: "coddoc", DataType: "string" },
-            { Name: "correlativo" },
-            { Name: "codprod", NotNull: true, DataType: "string" },
-            { Name: "desprod", NotNull: true, DataType: "string" },
-            { Name: "codmedida", NotNull: true, DataType: "string"},
-            { Name: "cantidad", NotNull: true, DataType: "number" },
-            { Name: "equivale",NotNull: true, DataType: "number"  },
-            { Name: "totalunidades", NotNull: true, DataType: "number"},
-            { Name: "precio", NotNull: true },
-            { Name: "subtotal",  NotNull: true, DataType: "number" },
-            { Name: "costo", NotNull: true },
-            { Name: "totalcosto", NotNull: true }
+    var tempcenso = {
+        Name: "tempcenso",
+        Columns: [
+            { Name: "ID", PrimaryKey: true, AutoIncrement: true},
+            { Name: "CODSUCURSAL", DataType: "string" },
+            { Name: "CODVEN", DataType: "number" },
+            { Name: "FECHA", DataType: "string" },
+            { Name: "CODCLIE", DataType: "number" },
+            { Name: "NITCLIE", DataType: "string" },
+            { Name: "TIPONEGOCIO", DataType: "string"},
+            { Name: "NEGOCIO", DataType: "string"},
+            { Name: "NOMCLIE", DataType: "string"},
+            { Name: "REFERENCIA", DataType: "string"},
+            { Name: "CODMUNI", DataType: "string"},
+            { Name: "CODDEPTO", DataType: "string"},
+            { Name: "OBS", DataType: "string"},
+            { Name: "TELEFONO", DataType: "string"},
+            { Name: "VISITA", DataType: "string"},
+            { Name: "LAT", DataType: "number" },
+            { Name: "LONG", DataType: "number" }
         ]
-    }
-        //TABLA CENSO
-    var TblCenso = {
-            Name: "censo",
-            Columns: [
-                {Name: "Id",PrimaryKey: true,AutoIncrement: true},
-                { Name: "empnit"},
-                { Name: "codven"},
-                { Name: "codruta"},
-                { Name: "negocio", DataType: "string" },
-                { Name: "nomcliente"},
-                { Name: "dircliente"},
-                { Name: "codmun" },
-                { Name: "coddep" },
-                { Name: "telefono"},
-                { Name: "latitud"},
-                { Name: "longitud"},
-                { Name: "obs", DataType: "string" },
-                { Name: "concre", DataType: "string" },
-                { Name: "giro", DataType: "string" },
-                { Name: "token", DataType: "string" },
-           ]
-    }
-
+    };
+  
     var DataBase = {
         Name: DbName,
-        Tables: [TblTemp,TblCenso]
+        Tables: [tempcenso]
     }
 
     return DataBase;
 };
+
+let classDb = {
+    SelectCenso: (dia,codven,idContainer)=>{
+        let contenedor = document.getElementById(idContainer);
+
+        let tbl = `<div class="table-responsive col-12">
+        <table class="table table-responsive table-hover table-striped">
+            <thead class="bg-trans-gradient text-white">
+                <tr>
+                    <td>Código/NIT</td>
+                    <td>Cliente/Dirección</td>
+                    <td>Teléfono</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody id="tblListado">`;
+
+        let tblfoot = `</tbody></table></div>`;
+
+        let str = '';
+        DbConnection.select({
+            From: "tempcenso",
+            Where: {
+                visita: dia,
+                codven: Number(codven)
+            }
+        }, function (clientes) {
+    
+            clientes.map((rows)=>{
+                str +=  `
+                <tr>
+                    <td>${rows.NITCLIE}
+                        <br>
+                        <small>Código: <b>${rows.CODCLIE}</b> </small>
+                    </td>
+
+                    <td>${rows.NOMCLIE}
+                            <br>
+                        <small><b>${rows.TIPONEGOCIO}-${rows.NEGOCIO}</b></small>
+                            <br class="border-bottom">
+                        <small>${rows.DIRCLIE},${rows.MUNICIPIO}</small>
+                    </td>
+                        <td>${rows.TELEFONO}
+                    </td>
+                    <td>
+                        <button class="btn btn-warning btn-sm btn-circle" 
+                        onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
+                            <i class="fal fa-edit"></i>Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm" onclick="">
+                            <i class="fal fa-send"></i>Enviar
+                        </button>
+                    </td>
+                </tr>`
+            }, function (error) {
+                console.log(error);
+                contenedor.innerHTML = error.toString();    
+            })
+            contenedor.innerHTML = tbl + str + tblfoot;
+        });
+        
+    },
+    InsertCliente: async (empnit,codven,nit,nombre,direccion,codmunicipio,coddepartamento,telefono,latitud,longitud,obs,negocio,concre)=>{
+            
+        var data = {
+            empnit:empnit,
+            codven:codven,
+            negocio:negocio,
+            giro: 'GENERAL',
+            nit:nit,
+            nomcliente:nombre,
+            dircliente:direccion,
+            codmun:codmunicipio,
+            coddep:coddepartamento,
+            telefono:telefono,
+            concre:concre,
+            latitud:latitud,
+            longitud:longitud,
+            obs:obs,
+            token:GlobalToken
+        };
+
+
+        DbConnection = new JsStore.Instance(DbName);
+        await DbConnection.insert({Into: "censo",Values: [data]},
+                function (rowsAdded) {
+                    funciones.Aviso('Cliente registrado exitosamente');
+                    classCenso.LimpiarCampos();
+                }, 
+                function (err) {
+                    console.log(err);
+                    funciones.AvisoError('No se puedo Guardar este Cliente, error de base de datos');
+                })
+        
+    },
+    DeleteCliente: (id)=>{
+        funciones.Confirmacion('¿Está seguro que desea ELIMINAR este cliente?')
+            .then((value)=>{
+                if(value==true){
+                    DbConnection.delete({
+                        From: 'censo',
+                        Where: {
+                            Id: Number(id)
+                        }
+                    }, function (rowsDeleted) {
+                        console.log(rowsDeleted + ' rows deleted');
+                        if (rowsDeleted > 0) {
+                            document.getElementById(id).remove();
+                            classCenso.SelectCensoAll(GlobalEmpnit,GlobalCodven,document.getElementById('tblCenso'));
+                            funciones.Aviso("Cliente eliminado con éxito");
+                        }
+                    }, function (error) {
+                        alert(error.Message);
+                    })
+                }
+            })
+    },
+    DeleteClienteSilent: (id)=>{
+        
+        DbConnection.delete({
+            From: 'tempcenso',
+            Where: {
+                ID: Number(id)
+            }
+        }, function (rowsDeleted) {
+            console.log(rowsDeleted + ' rows deleted');
+            if (rowsDeleted > 0) {
+                document.getElementById(id).remove();
+                classCenso.SelectCensoAll(GlobalEmpnit,GlobalCodven,document.getElementById('tblCenso'));
+                funciones.Aviso("Cliente eliminado con éxito");
+            }
+        }, function (error) {
+            alert(error.Message);
+        })
+    
+    }
+}
