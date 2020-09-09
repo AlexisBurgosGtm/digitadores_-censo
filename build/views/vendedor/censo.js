@@ -789,12 +789,10 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
 
     let tblfoot = `</tbody></table></div>`;
 
-    axios.get('/censo/listaclientes', {
-        params:{
+    axios.post('/censo/listaclientes', {
             sucursal: sucursal,
             codven:codven,
-            visita:visita
-        }
+            visita:visita        
     })
     .then((response) => {
         const data = response.data.recordset;

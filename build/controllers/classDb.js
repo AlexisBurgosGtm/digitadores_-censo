@@ -153,9 +153,7 @@ let classDb = {
         
     },
     EditCliente: (data,id)=>{  
-        console.log('datos a editar')
-        console.log(data);
-        console.log('id a editar');
+        console.log('id a editar: ');
         console.log(id)
 
         return new Promise(async(resolve, reject)=>{

@@ -17,9 +17,9 @@ router.post("/nuevocliente", async(req,res)=>{
 });
 
 
-router.get("/listaclientes", async(req,res)=>{
+router.post("/listaclientes", async(req,res)=>{
 
-    const{sucursal,codven,visita} = req.query;
+    const{sucursal,codven,visita} = req.body;
 
     let qry = `SELECT ME_CENSO.CODSUCURSAL, ME_CENSO.CODVEN, ME_CENSO.FECHA, ME_CENSO.ID AS CODCLIE, ME_CENSO.NITCLIE,ME_CENSO.TIPONEGOCIO, ME_CENSO.NEGOCIO, ME_CENSO.NOMCLIE, ME_CENSO.DIRCLIE, ME_CENSO.CODMUN, 
     ME_CENSO.CODDEPTO, ME_CENSO.REFERENCIA, ME_CENSO.OBS, ME_CENSO.VISITA, ME_CENSO.LAT, ME_CENSO.LONG, ME_CENSO.TELEFONO, ME_Municipios.DESMUNI AS MUNICIPIO, ME_Departamentos.DESDEPTO AS DEPARTAMENTO
