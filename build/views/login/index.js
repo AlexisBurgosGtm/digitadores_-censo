@@ -4,7 +4,7 @@ function getView(){
             return `
         <div class="row">
             <div class="col-md-4 col-sm-12 col-lg-4 col-lx-4">
-                
+                <h3>Ver 1</h3>
             </div>
 
             <div class="col-md-4 col-sm-12 col-lg-4 col-lx-4">
