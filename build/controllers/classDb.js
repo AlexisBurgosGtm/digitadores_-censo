@@ -73,7 +73,6 @@ let classDb = {
         let contenedor = document.getElementById(idContainer);
         
         let tbl = `<div class="table-responsive col-12">
-        <h5 class="text-danger">Clientes Sin Enviar</h5>
         <table class="table table-responsive table-hover table-striped">
             <thead class="bg-danger text-white">
                 <tr>
