@@ -243,7 +243,7 @@ async function addListeners(){
         }else{
             fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
         }
-        
+
     });
 
     let btnNuevoClienteUbicacion = document.getElementById('btnNuevoClienteUbicacion');
@@ -325,28 +325,43 @@ async function addListeners(){
                             GlobalBool = false;
                             document.getElementById('btnTabListado').click();
                             fcnCleanDataCliente();
-                            //fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
-                            classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+                            
+                            if(cmbTipoLista.value == 'NOENVIADOS'){
+                                classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+                            }else{
+                                fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                            };
 
                             funciones.Aviso('Cliente Creado exitosamente!!');
                             document.getElementById('btnGuardar').innerHTML = '<i class="fal fa-save"></i>Guardar';
                         })
                         .catch(()=>{
-                            funciones.AvisoError('No se pudo guardar el cliente, revise su conexión');
-                            document.getElementById('btnGuardar').innerHTML = '<i class="fal fa-save"></i>Guardar';
+                            funciones.AvisoError('Guardando cliente en el teléfono, deberá enviarse después');
+                            //se intenta guardar el cliente localmente dado que no hay conexión al host
+                            fcnGuardarClienteLocal()
+                            .then(()=>{
+                                GlobalBool = false;
+                                document.getElementById('btnTabListado').click();   
+                                fcnCleanDataCliente();
+                            
+                                if(cmbTipoLista.value == 'NOENVIADOS'){
+                                    classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+                                }else{
+                                    fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                                };
+
+                                funciones.Aviso('Cliente Creado exitosamente!!');
+                                document.getElementById('btnGuardar').innerHTML = '<i class="fal fa-save"></i>Guardar';
+                            })
+                            .catch(()=>{
+                                document.getElementById('btnGuardar').innerHTML = '<i class="fal fa-save"></i>Guardar';
+                            })
+                            
                         })
                         
                     }
                 })
-            //})
-            //.catch(()=>{
-              //  funciones.AvisoError('Código ya existe o no se pudo Verificar');                
-                //document.getElementById('btnGuardar').innerHTML = '<i class="fal fa-save"></i>Guardar';
-                //document.getElementById('txtCodigo').focus();
-            //})
-
             
-
         }else{
 
             funciones.Confirmacion('¿Está seguro que desea EDITAR este Cliente?')
@@ -365,7 +380,7 @@ async function addListeners(){
                         document.getElementById('txtCodigo').disabled = false;
                     })
                     .catch(()=>{
-                        funciones.AvisoError('No se pudo editar el cliente, revise su conexión')
+                        funciones.AvisoError('No se pudo editar el cliente, consulte a servicio técnico')
                     })
                     
                 }
@@ -413,7 +428,8 @@ function verifyCodigoCliente(codclie){
 
 };
 
-function fcnGuardarCliente(){  
+//funcion para guardar el cliente en indexed
+function fcnGuardarClienteLocal(){  
     
     return new Promise((resolve,reject)=>{
         let txtNit = document.getElementById('txtNit');
@@ -442,8 +458,8 @@ function fcnGuardarCliente(){
             NEGOCIO: funciones.quitarCaracteres(txtNegocio.value,'"'," pulg",true),
             NOMCLIE: funciones.quitarCaracteres(txtNomcliente.value,'"'," pulg",true), 
             DIRCLIE: funciones.quitarCaracteres(txtDircliente.value,'"'," pulg",true), 
-            CODMUNI: cmbMunicipio.value,
-            CODDEPTO: cmbDepartamento.value,
+            CODMUNI: cmbMunicipio.value.toString(),
+            CODDEPTO: cmbDepartamento.value.toString(),
             REFERENCIA: funciones.quitarCaracteres(txtReferencia.value,'"'," pulg",true), 
             OBS: funciones.quitarCaracteres(txtObs.value,'"'," pulg",true), 
             TELEFONO: txtTelefono.value,
@@ -464,7 +480,8 @@ function fcnGuardarCliente(){
     });
 };
 
-function fcnGuardarClienteOLD(){  
+//funcion para enviar el cliente online
+function fcnGuardarCliente(){  
     
     return new Promise((resolve,reject)=>{
         let txtNit = document.getElementById('txtNit');
@@ -520,7 +537,7 @@ function fcnGuardarClienteOLD(){
 };
 
 
-//EditCliente
+//EditCliente localmente
 function fcnEditarCliente(){  
     
     return new Promise((resolve,reject)=>{
@@ -547,8 +564,8 @@ function fcnEditarCliente(){
             NEGOCIO: funciones.quitarCaracteres(txtNegocio.value,'"'," pulg",true),
             NOMCLIE: funciones.quitarCaracteres(txtNomcliente.value,'"'," pulg",true), 
             DIRCLIE: funciones.quitarCaracteres(txtDircliente.value,'"'," pulg",true), 
-            CODMUNI:cmbMunicipio.value,
-            CODDEPTO:cmbDepartamento.value,
+            CODMUNI:cmbMunicipio.value.toString(),
+            CODDEPTO:cmbDepartamento.value.toString(),
             REFERENCIA: funciones.quitarCaracteres(txtReferencia.value,'"'," pulg",true), 
             OBS: funciones.quitarCaracteres(txtObs.value,'"'," pulg",true), 
             TELEFONO:txtTelefono.value,
@@ -568,6 +585,7 @@ function fcnEditarCliente(){
     });
 };
 
+//Edit cliente online
 function fcnEditarClienteOLD(){  
     funciones.AvisoError('Estamos trabajando en la edición del cliente')
     return;
@@ -765,7 +783,6 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
                                 <td>Código/NIT</td>
                                 <td>Cliente/Dirección</td>
                                 <td>Teléfono</td>
-                                <td></td>
                             </tr>
                         </thead>
                         <tbody id="tblListado">`;
@@ -798,17 +815,19 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
                     <td>
                         ${rows.TELEFONO}
                     </td>
-                    <td>
-                        <button class="btn btn-warning btn-sm btn-circle" onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
-                            <i class="fal fa-edit"></i>Edit
-                        </button>
-                    </td>
                 </tr>`
         })
+        /*
+        <td>
+            <button class="btn btn-warning btn-sm btn-circle" onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
+                <i class="fal fa-edit"></i>Edit
+            </button>
+        </td>
+        */
         container.innerHTML = tbl + strdata + tblfoot;
         
     }, (error) => {
-        funciones.AvisoError('Error en la solicitud');
+        funciones.AvisoError('No se puede obtener la lista de clientes');
         strdata = '';
         container.innerHTML = '';
     });
@@ -854,3 +873,8 @@ function getComboDepartamentos(idContainer){
         contenedor.innerHTML = strdata;        
     });
 };
+
+function sendCliente(data){
+    console.log(data);
+    funciones.Aviso('Enviando')
+}

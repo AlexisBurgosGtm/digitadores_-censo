@@ -6,9 +6,9 @@ window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndex
         navigator.storage.persist()
         .then(function(persistent){
             if (persistent){
-                console.log("Storage will not be cleared except by explicit user action");
+                console.log("Almacenamiento Persistente");
             }else{
-              console.log("Storage may be cleared by the UA under storage pressure");
+              console.log("Almacenamiento NO Persistente");
           }});
               
 var DbConnection;
@@ -96,13 +96,13 @@ let classDb = {
                 CODVEN: Number(codven)
             }
         }, function (clientes) {
-            console.log(clientes);
+            //console.log(clientes);
             clientes.map((rows)=>{
                 str +=  `
-                <tr>
+                <tr class="cursormano border-bottom">
                     <td>${rows.NITCLIE}
                         <br>
-                        <small>Código: <b>${rows.CODCLIE}</b> </small>
+                        <small>Código: <b>${rows.ID}</b> </small>
                     </td>
 
                     <td>${rows.NOMCLIE}
@@ -114,14 +114,14 @@ let classDb = {
                         <td>${rows.TELEFONO}
                     </td>
                     <td>
-                        <button class="btn btn-warning btn-sm btn-circle" 
-                        onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
+                        <button class="btn btn-warning btn-sm btn-rounded" 
+                        onclick="getDataCliente('${rows.ID}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUNI}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
                             <i class="fal fa-edit"></i>Edit
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-success btn-sm" onclick="">
-                            <i class="fal fa-send"></i>Enviar
+                        <button class="btn btn-success btn-sm btn-rounded" onclick="classDb.sendCliente(${rows[0]});">
+                            <i class="fal fa-updload"></i>Enviar
                         </button>
                     </td>
                 </tr>`
@@ -222,5 +222,28 @@ let classDb = {
             alert(error.Message);
         })
     
+    },
+    sendCliente: (data)=>{
+
+
+
+        /* 
+        DbConnection.select({
+            From: "tempcenso",
+            Where: {
+                VISITA: dia,
+                CODVEN: Number(codven)
+            }
+        }, function (clientes) {
+            //console.log(clientes);
+            clientes.map((rows)=>{
+                str +=  ``
+            }, function (error) {
+                console.log(error);
+                contenedor.innerHTML = error.toString();    
+            })
+            contenedor.innerHTML = tbl + str + tblfoot;
+        });
+        */
     }
 }
