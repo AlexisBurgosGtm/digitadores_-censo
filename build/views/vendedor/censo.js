@@ -574,7 +574,7 @@ function fcnEditarCliente(){
             LONG: Number(txtLongitud.innerText)
         };
     
-        classDb.EditCliente(data,Number(txtCodigo.text))
+        classDb.EditCliente(data, Number(txtCodigo.value))
         .then(()=>{
             resolve();
         })
