@@ -570,8 +570,8 @@ function fcnEditarCliente(){
             OBS: funciones.quitarCaracteres(txtObs.value,'"'," pulg",true), 
             TELEFONO:txtTelefono.value,
             VISITA:cmbVisitaCliente.value,
-            LAT:txtLatitud.innerText,
-            LONG:txtLongitud.innerText
+            LAT: Number(txtLatitud.innerText),
+            LONG: Number(txtLongitud.innerText)
         };
     
         classDb.EditCliente(data,Number(txtCodigo.text))
