@@ -121,7 +121,7 @@ let classDb = {
                     </td>
                     <td>
                         <button class="btn btn-success btn-sm btn-rounded" onclick="classDb.sendCliente(${rows[0]});">
-                            <i class="fal fa-updload"></i>Enviar
+                            <i class="fal fa-paper-plane"></i>Enviar
                         </button>
                     </td>
                 </tr>`
@@ -225,8 +225,9 @@ let classDb = {
     
     },
     sendCliente: (data)=>{
-
-
+        console.log('datos a enviar');
+        console.log(data);
+        
 
         /* 
         DbConnection.select({
