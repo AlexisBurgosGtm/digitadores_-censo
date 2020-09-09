@@ -568,7 +568,7 @@ function fcnEditarCliente(){
             CODDEPTO:cmbDepartamento.value.toString(),
             REFERENCIA: funciones.quitarCaracteres(txtReferencia.value,'"'," pulg",true), 
             OBS: funciones.quitarCaracteres(txtObs.value,'"'," pulg",true), 
-            TELEFONO:txtTelefono.value,
+            TELEFONO:txtTelefono.value.toString(),
             VISITA:cmbVisitaCliente.value,
             LAT: Number(txtLatitud.innerText),
             LONG: Number(txtLongitud.innerText)
