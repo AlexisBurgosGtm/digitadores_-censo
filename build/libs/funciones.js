@@ -142,7 +142,7 @@ let funciones = {
       for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++)
           num = num.substring(0, num.length - (4 * i + 3)) + ',' + num.substring(num.length - (4 * i + 3));
       return ( ((sign) ? '' : '-') +  num + ((cents == "00") ? '' : '.' + cents) + ' ' + signo  ).toString();
-  },
+    },
     loadScript: function(url, idContainer) {
         return new Promise((resolve, reject) => {
           var script = document.createElement('script');

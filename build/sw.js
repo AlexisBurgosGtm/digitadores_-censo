@@ -1,4 +1,3 @@
-
 var CACHE = 'mercadosefectivoscenso';
 const staticAssets = [  
   './css/vendors.bundle.css',
@@ -25,20 +24,17 @@ const staticAssets = [
   './index.js',
   './favicon.png',
   './index.html',
-   './sw.js',
-   './views/vendedor/censo.js',
-   './views/login/index.js'
+  './sw.js',
+  './views/vendedor/censo.js',
+  './views/login/index.js'
 ];
 
 self.addEventListener('install', function(evt) {
   console.log('Service worker instalado');
   evt.waitUntil(caches.open(CACHE).then(function (cache) {
     cache.addAll(staticAssets);
-  }));
-  
-	
+  }));	
 });
-
 
 self.addEventListener('fetch', function(evt) {
 
@@ -46,7 +42,7 @@ self.addEventListener('fetch', function(evt) {
   if (req.clone().method == "GET") {
     evt.respondWith(fromCache(evt.request));
     evt.waitUntil(update(evt.request));
-  }
+  };
 
   /*
   if (navigator.onLine){
@@ -64,12 +60,11 @@ self.addEventListener('fetch', function(evt) {
 
 });
 
-
 function fromCache(request) {
   return caches.open(CACHE).then(function (cache) {
     return cache.match(request);
   });
-}
+};
 
 async function update(request) {
   return caches.open(CACHE).then(function (cache) {
@@ -82,6 +77,6 @@ async function update(request) {
       });
     });
   });
-}
+};
     
 

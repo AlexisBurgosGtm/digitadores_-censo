@@ -1,4 +1,3 @@
-
 function getView(){
     let view = {
         tabsClientes :()=>{
@@ -536,7 +535,6 @@ function fcnGuardarCliente(){
     });
 };
 
-
 //EditCliente localmente
 function fcnEditarCliente(){  
     
@@ -586,7 +584,7 @@ function fcnEditarCliente(){
 };
 
 //Edit cliente online
-function fcnEditarClienteOLD(){  
+function fcnEditarClienteOnline(){  
     funciones.AvisoError('Estamos trabajando en la edición del cliente')
     return;
     return new Promise((resolve,reject)=>{
@@ -741,7 +739,6 @@ function Lmap(lat,long){
   
 };
 
-
 function iniciarVistaVendedorCenso(){
     getView();
     addListeners();
@@ -872,7 +869,50 @@ function getComboDepartamentos(idContainer){
     });
 };
 
-function sendCliente(data){
-    console.log(data);
-    funciones.Aviso('Enviando')
-}
+function sendCliente(id,nit,tiponegocio,negocio,nombre,direccion,referencia,codmun,coddepto,obs,codven,visita,latitud,longitud,telefono,fecha){
+    funciones.Confirmacion('¿Está seguro que desea Enviar este Cliente?')
+    .then((value)=>{
+        if(value==true){
+                axios.post('/censo/nuevocliente',{
+                    sucursal:GlobalCodSucursal,
+                    codven:Number(codven),
+                    fecha:fecha.toString(),
+                    codclie:0,
+                    tiponegocio:tiponegocio.toString(),
+                    nitclie:nit.toString(),
+                    negocio: funciones.quitarCaracteres(negocio,'"'," pulg",true),
+                    nomclie: funciones.quitarCaracteres(nombre,'"'," pulg",true), 
+                    dirclie: funciones.quitarCaracteres(direccion,'"'," pulg",true), 
+                    codmun:codmun.toString(),
+                    coddepto:coddepto.toString(),
+                    referencia: funciones.quitarCaracteres(referencia,'"'," pulg",true), 
+                    obs: funciones.quitarCaracteres(obs,'"'," pulg",true), 
+                    telefono:telefono.toString(),
+                    visita:visita.toString(),
+                    lat:Number(latitud),
+                    long:Number(longitud)
+                })
+                .then((response) => {
+                    
+                    let data = response.data;
+                    if(Number(data.rowsAffected[0])>0){
+                        funciones.hablar('Cliente enviado con éxito!!');
+                        funciones.Aviso('Cliente enviado con éxito!!');
+                        //elimina el cliente de la base de datos local
+                        classDb.DeleteClienteSilent(id);
+                        //recarga la lista de clientes
+                        let cmbDiaVisita = document.getElementById('cmbDiaVisita');
+                        classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+                    }else{
+                        funciones.hablar('No pude conectarme al servidor');
+                        funciones.AvisoError('No pude conectarme al servidor');
+                    };
+                }, (error) => {
+                    funciones.hablar('No pude conectarme al servidor');
+                    funciones.AvisoError('No pude conectarme al servidor');
+                });      
+        }
+    
+    });
+
+};

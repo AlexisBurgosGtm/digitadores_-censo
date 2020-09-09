@@ -120,7 +120,7 @@ let classDb = {
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-success btn-sm btn-rounded" onclick="classDb.sendCliente(${rows[0]});">
+                        <button class="btn btn-success btn-sm btn-rounded" onclick="sendCliente(${rows.ID},'${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUNI}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}','${rows.FECHA}')">
                             <i class="fal fa-paper-plane"></i>Enviar
                         </button>
                     </td>
@@ -215,37 +215,12 @@ let classDb = {
         }, function (rowsDeleted) {
             console.log(rowsDeleted + ' rows deleted');
             if (rowsDeleted > 0) {
-                document.getElementById(id).remove();
-                classCenso.SelectCensoAll(GlobalEmpnit,GlobalCodven,document.getElementById('tblCenso'));
-                funciones.Aviso("Cliente eliminado con éxito");
+ 
+ 
             }
         }, function (error) {
             alert(error.Message);
         })
     
-    },
-    sendCliente: (data)=>{
-        console.log('datos a enviar');
-        console.log(data);
-        
-
-        /* 
-        DbConnection.select({
-            From: "tempcenso",
-            Where: {
-                VISITA: dia,
-                CODVEN: Number(codven)
-            }
-        }, function (clientes) {
-            //console.log(clientes);
-            clientes.map((rows)=>{
-                str +=  ``
-            }, function (error) {
-                console.log(error);
-                contenedor.innerHTML = error.toString();    
-            })
-            contenedor.innerHTML = tbl + str + tblfoot;
-        });
-        */
     }
 }
