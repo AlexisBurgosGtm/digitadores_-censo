@@ -31,10 +31,27 @@ const staticAssets = [
 
 self.addEventListener('install', function(evt) {
   console.log('Service worker instalado');
-  evt.waitUntil(caches.open(CACHE).then(function (cache) {
-    cache.addAll(staticAssets);
+  evt.waitUntil(caches.open(CACHE)
+    .then(function (cache) {
+      cache.addAll(staticAssets);
   }));	
 });
+
+self.addEventListener('activate', function(event) {
+  //sucede una vez cuando quiers actualizar el worker  
+});
+
+self.addEventListener('sync', function(event) {
+	console.log("sync event", event);
+    if (event.tag === 'syncClientes') {
+        event.waitUntil(syncClientes()); // sending sync request
+    }
+});
+
+function syncClientes(){
+
+  console.log('sincronizando clientes en background')
+};
 
 self.addEventListener('fetch', function(evt) {
 
@@ -44,19 +61,6 @@ self.addEventListener('fetch', function(evt) {
     evt.waitUntil(update(evt.request));
   };
 
-  /*
-  if (navigator.onLine){
-    if (req.clone().method == "GET") {
-      //evt.respondWith(fromCache(evt.request));
-      evt.waitUntil(update(evt.request));
-    }
-  }else{
-    if (req.clone().method == "GET") {
-      evt.respondWith(fromCache(evt.request));
-      //evt.waitUntil(update(evt.request));
-    }
-  };
-  */
 
 });
 
