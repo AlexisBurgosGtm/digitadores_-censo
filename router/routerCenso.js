@@ -17,6 +17,20 @@ router.post("/nuevocliente", async(req,res)=>{
 });
 
 
+router.post('/resumenclientes',async(req,res)=>{
+    const {sucursal,codven} = req.body;
+
+    let qry = `SELECT ME_Municipios.DESMUNI AS MUNICIPIO, ME_CENSO.FECHA, COUNT(ME_CENSO.FECHA) AS TOTAL
+                FROM ME_CENSO LEFT OUTER JOIN
+                ME_Municipios ON ME_CENSO.CODMUN = ME_Municipios.CODMUNI AND ME_CENSO.CODSUCURSAL = ME_Municipios.CODSUCURSAL
+                WHERE (ME_CENSO.CODSUCURSAL = '${sucursal}') AND (ME_CENSO.CODVEN = ${codven})
+                GROUP BY ME_Municipios.DESMUNI, ME_CENSO.FECHA
+                ORDER BY ME_CENSO.FECHA`;
+
+    execute.Query(res,qry);
+
+});
+
 router.post("/listaclientes", async(req,res)=>{
 
     const{sucursal,codven,visita} = req.body;

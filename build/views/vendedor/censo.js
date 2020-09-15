@@ -26,6 +26,7 @@ function getView(){
                                         <select class="form-control" id="cmbTipoLista">
                                             <option value="NOENVIADOS">SIN ENVIAR</option>
                                             <option value="ENVIADOS">ENVIADOS</option>
+                                            <option value="HISTORIAL">HISTORIAL</option>
                                         </select>
                                     </div>
                                 </div>
@@ -219,11 +220,29 @@ async function addListeners(){
 
     let cmbTipoLista = document.getElementById('cmbTipoLista');
     cmbTipoLista.addEventListener('change', ()=>{
+
+        switch (cmbTipoLista.value) {
+            case 'NOENVIADOS':
+                classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');    
+                break;
+            case 'ENVIADOS':
+                fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                break;
+            case 'RESUMEN':
+                fcnCensoResumen(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                break;
+            default:
+                classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');    
+                break;
+        }
+
+        /* 
         if(cmbTipoLista.value == 'NOENVIADOS'){
             classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
         }else{
             fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
         }
+        */
     })
 
     let cmbTipoNegocio = document.getElementById('cmbTipoNegocio')
@@ -957,4 +976,62 @@ function slideAnimationTabs(){
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         // your code on active tab shown
     });
-}
+};
+
+function fcnCensoResumen(sucursal, codven, visita, idContainer){
+    let container = document.getElementById(idContainer);
+    container.innerHTML = GlobalLoader;
+    
+    let strdata = '';
+    let tbl = `<div class="table-responsive col-12">
+                    <table class="table table-responsive table-hover table-striped">
+                        <thead class="bg-green text-white">
+                            <tr>
+                                <td>Municipio</td>
+                                <td>Fecha</td>
+                                <td>Total</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody id="">`;
+
+    let tblfoot = `</tbody></table></div>`;
+
+    axios.post('/censo/resumenclientes', {
+            sucursal: sucursal,
+            codven:codven
+    })
+    .then((response) => {
+        const data = response.data.recordset;
+        
+        data.map((rows)=>{
+                strdata = strdata + `<tr class="cursormano border-bottom">
+                    <td>
+                        ${rows.MUNICIPIO}
+                    </td>
+                    <td>
+                        ${rows.FECHA.replace('T00:00:00.000Z','')}
+                    </td>
+                    <td>
+                        ${rows.TOTAL}
+                    </td>
+                    <td>
+                    </td>
+                </tr>`
+        })
+        /*
+        <td>
+            <button class="btn btn-warning btn-sm btn-circle" onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
+                <i class="fal fa-edit"></i>Edit
+            </button>
+        </td>
+        */
+        container.innerHTML = tbl + strdata + tblfoot;
+        
+    }, (error) => {
+        funciones.AvisoError('No se puede obtener la lista de clientes');
+        strdata = '';
+        container.innerHTML = '';
+    });
+
+};

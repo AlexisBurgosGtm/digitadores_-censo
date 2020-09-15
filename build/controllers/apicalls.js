@@ -13,63 +13,6 @@ let api = {
         })
         
     },
-    coronavirus :(idContenedor)=>{
-        let container = document.getElementById(idContenedor);
-        container.innerHTML = GlobalLoader;
-        
-        let strdata = '';
-        let tblheader = `<div class="row">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="txtFiltrarCoronavirus" placeholder="Escriba para buscar su país...">
-                            </div>
-                            
-                        </div>
-                    <table class="table table-responsive table-hover table-striped table-bordered" id="tblCovid">
-                        <thead class="bg-trans-gradient text-white">
-                            <tr>
-                                <td>País</td>
-                                <td>Infectados</td>
-                                <td>Muertes</td>
-                                <td>Recuperados</td>
-                                <td>Críticos</td>
-                            </tr>
-                        </thead><tbody>`;
-        let tblfooter = `</tbody></table>`
-
-        axios.get('https://coronavirus-19-api.herokuapp.com/countries')
-        .then((response) => {
-            console.log(response)
-            const data = response.data;
-            
-            data.map((rows)=>{
-                
-                    strdata = strdata + `<tr>
-                                <td>${rows.country}</td>
-                                <td>${rows.cases}</td>
-                                <td>${rows.deaths}</td>
-                                <td>${rows.recovered}</td>
-                                <td>${rows.critical}</td>
-                            </tr>`
-            })
-            
-                  
-        }, (error) => {
-            funciones.AvisoError('Error en la solicitud');
-            strdata = '';
-        })
-        .then(()=>{
-            container.innerHTML = tblheader + strdata + tblfooter;
-
-            let txtFiltrarCoronavirus = document.getElementById('txtFiltrarCoronavirus');
-            txtFiltrarCoronavirus.addEventListener('keyup',()=>{
-                funciones.crearBusquedaTabla('tblCovid','txtFiltrarCoronavirus');
-            });
-        })
-
-        
-        
-        
-    },
     empleadosLogin : (sucursal,user,pass)=>{
         return new Promise((resolve,reject)=>{
             axios.get('/empleados/login', {
@@ -161,47 +104,6 @@ let api = {
             container.innerHTML = 'No se pudo cargar la lista';
         });
 
-    },
-    repartidorMapaEmbarque: async(embarque,idContenedor,idLbTotal)=>{
-
-        let container = document.getElementById(idContenedor);
-        container.innerHTML = GlobalLoader;
-        
-        let lbTotal = document.getElementById(idLbTotal);
-        lbTotal.innerText = '---';
-
-        let tbl = `<div class="mapcontainer" id="mapcontainer"></div>`;        
-        
-        container.innerHTML = tbl;
-        
-        let mapcargado = 0;
-
-        axios.post('/repartidor/mapaembarque', {
-            sucursal: GlobalCodSucursal,
-            embarque:embarque
-        })
-        .then((response) => {
-            const data = response.data.recordset;
-            let total =0;
-            data.map((rows)=>{
-                total = total + Number(rows.IMPORTE);
-                    if(mapcargado==0){
-                        map = Lmap(rows.LAT, rows.LONG, rows.CLIENTE, rows.IMPORTE);
-                        mapcargado = 1;
-                    }else{
-                        L.marker([rows.LAT, rows.LONG])
-                        .addTo(map)
-                        .bindPopup(`${rows.CLIENTE} - ${funciones.setMoneda(rows.IMPORTE,'Q ')}<br><small>${rows.DIRECCION},${rows.MUNICIPIO}</small><br><small>${rows.VENDEDOR}</small>` )   
-                    }
-            })
-            //container.innerHTML = tbl;
-            lbTotal.innerText = funciones.setMoneda(total,'Q ');
-        }, (error) => {
-            funciones.AvisoError('Error en la solicitud');
-            container.innerHTML = '';
-            lbTotal.innerText = 'Q 0.00';
-        });
-           
     },
     comboVendedores : (sucursal,idContainer)=>{
         let container = document.getElementById(idContainer);
