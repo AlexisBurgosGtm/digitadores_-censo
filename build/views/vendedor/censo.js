@@ -26,7 +26,7 @@ function getView(){
                                         <select class="form-control" id="cmbTipoLista">
                                             <option value="NOENVIADOS">SIN ENVIAR</option>
                                             <option value="ENVIADOS">ENVIADOS</option>
-                                            <option value="HISTORIAL">HISTORIAL</option>
+                                            <option value="RESUMEN">RESUMEN</option>
                                         </select>
                                     </div>
                                 </div>
