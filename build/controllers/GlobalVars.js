@@ -21,6 +21,7 @@ let GlobalNivelUser = 0;
 let GlobalTipoUsuario ='';
 let GlobalSelectedDia ='';
 let GlobalBool = false;
+let GlobalOnline = 'NO'; //SI o NO para indicar si estoy editando Online
 
 let GlobalEmpnit = '1034261-3';
 let GlobalEmpNombre = 'MERCADOS EFECTIVOS';

@@ -381,32 +381,54 @@ async function addListeners(){
                 })
             
         }else{
-
-            funciones.Confirmacion('¿Está seguro que desea EDITAR este Cliente?')
-            .then((value)=>{
-                if(value==true){
+            if(GlobalOnline=='NO'){ //los edita de forma local
+                funciones.Confirmacion('¿Está seguro que desea EDITAR este Cliente?')
+                .then((value)=>{
+                    if(value==true){
+        
+                        fcnEditarCliente()
+                        .then(()=>{
+                            GlobalBool = false;
+                            document.getElementById('btnTabListado').click();
+                            fcnCleanDataCliente();
     
-                    fcnEditarCliente()
-                    .then(()=>{
-                        GlobalBool = false;
-                        document.getElementById('btnTabListado').click();
-                        fcnCleanDataCliente();
-                        //fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
-                        classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
-
-                        funciones.Aviso('Cliente Editado exitosamente!!');
-                        document.getElementById('txtCodigo').disabled = false;
-                    })
-                    .catch(()=>{
-                        funciones.AvisoError('No se pudo editar el cliente, consulte a servicio técnico')
-                    })
-                    
-                }
-            });
-
+                            //fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                            classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+    
+                            funciones.Aviso('Cliente Editado exitosamente!!');
+                            document.getElementById('txtCodigo').disabled = false;
+                        })
+                        .catch(()=>{
+                            funciones.AvisoError('No se pudo editar el cliente, consulte a servicio técnico')
+                        })
+                        
+                    }
+                });
+            }else{ //los edita Online
+                funciones.Confirmacion('¿Está seguro que desea EDITAR este Cliente en la Nube?')
+                .then((value)=>{
+                    if(value==true){
+        
+                        fcnEditarClienteOnline()
+                        .then(()=>{
+                            GlobalBool = false;
+                            document.getElementById('btnTabListado').click();
+                            fcnCleanDataCliente();
+    
+                            fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                            //classDb.SelectCenso(cmbDiaVisita.value,GlobalCodUsuario,'listadoContainer');
+    
+                            funciones.Aviso('Cliente Editado exitosamente!!');
+                            document.getElementById('txtCodigo').disabled = false;
+                        })
+                        .catch(()=>{
+                            funciones.AvisoError('No se pudo editar el cliente, consulte a servicio técnico')
+                        })
+                        
+                    }
+                });
+            }
         }
-        
-        
         
     });
 
@@ -607,8 +629,8 @@ function fcnEditarCliente(){
 
 //Edit cliente online
 function fcnEditarClienteOnline(){  
-    funciones.AvisoError('Estamos trabajando en la edición del cliente')
-    return;
+    //funciones.AvisoError('Estamos trabajando en la edición del cliente')
+    //return;
     return new Promise((resolve,reject)=>{
         let txtNit = document.getElementById('txtNit');
         let txtCodigo = document.getElementById('txtCodigo');
@@ -662,7 +684,8 @@ function fcnEditarClienteOnline(){
     });
 };
 
-function getDataCliente(codigo,nit,tiponegocio,negocio,nombre,direccion,referencia,codmun,coddepto,obs,codven,visita,latitud,longitud,telefono){
+function getDataCliente(codigo,nit,tiponegocio,negocio,nombre,direccion,referencia,codmun,coddepto,obs,codven,visita,latitud,longitud,telefono,online){
+    GlobalOnline = online;
     funciones.Confirmacion('¿Está seguro que desea EDITAR este cliente?')
     .then((value)=>{
         if(value==true){
@@ -687,6 +710,12 @@ function getDataCliente(codigo,nit,tiponegocio,negocio,nombre,direccion,referenc
             document.getElementById('txtLongitud').innerText = longitud;
 
             document.getElementById('btnTabNuevo').click();
+
+            if(online=="SI"){
+
+            }else{
+
+            }
         }
     });
 
@@ -832,6 +861,14 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
                     <td>
                         ${rows.TELEFONO}
                     </td>
+                    <td>
+                        <button class="btn btn-warning btn-sm"
+                        onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}','SI')">
+                            <i class="fal fa-edit"></i>
+                            Edit
+                        </button>
+                    </td>
+
                 </tr>`
         })
         /*

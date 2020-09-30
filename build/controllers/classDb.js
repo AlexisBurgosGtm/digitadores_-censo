@@ -114,7 +114,7 @@ let classDb = {
                     </td>
                     <td>
                         <button class="btn btn-warning btn-sm btn-rounded" 
-                        onclick="getDataCliente('${rows.ID}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUNI}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
+                        onclick="getDataCliente('${rows.ID}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUNI}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}','NO')">
                             <i class="fal fa-edit"></i>Edit
                         </button>
                     </td>
