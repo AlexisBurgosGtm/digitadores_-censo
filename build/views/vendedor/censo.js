@@ -825,7 +825,10 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
     
     let strdata = '';
     let tbl = `<div class="table-responsive col-12">
-                    <table class="table table-responsive table-hover table-striped">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="txtBuscar" placeholder="Escriba para buscar...">
+                </div>
+                    <table class="table table-responsive table-hover table-striped" id="tblCensoOnline">
                         <thead class="bg-trans-gradient text-white">
                             <tr>
                                 <td>Código/NIT</td>
@@ -878,8 +881,13 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
             </button>
         </td>
         */
+       //dibuja la tabla
         container.innerHTML = tbl + strdata + tblfoot;
         
+        //asigna el listener al filtro
+        document.getElementById('txtBuscar').addEventListener('keyup',(e)=>{
+            funciones.crearBusquedaTabla('tblCensoOnline','txtBuscar');
+        })
     }, (error) => {
         funciones.AvisoError('No se puede obtener la lista de clientes');
         strdata = '';
