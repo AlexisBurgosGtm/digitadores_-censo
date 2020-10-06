@@ -825,9 +825,11 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
     
     let strdata = '';
     let tbl = `<div class="table-responsive col-12">
+                <br>
                 <div class="form-group">
-                    <input type="text" class="form-control" id="txtBuscar" placeholder="Escriba para buscar...">
+                    <input type="text" class="form-control shadow" id="txtBuscar" placeholder="Escriba para buscar...">
                 </div>
+                <br>
                     <table class="table table-responsive table-hover table-striped" id="tblCensoOnline">
                         <thead class="bg-trans-gradient text-white">
                             <tr>
