@@ -10,9 +10,9 @@ function getView(){
             <div class="col-md-4 col-sm-12 col-lg-4 col-lx-4">
                 <div class="card">
 
-                    <div class="card-header bg-trans-gradient text-center">
+                    <div class="card-header bg-info text-center">
                     <button class="btn btn-sm btn-primary-outline btn-circle" id="btnComandos"></button>
-                        <h5 class="text-white">Inicio de Sesión</h5>
+                        <h5 class="text-white">Inicio de Sesión Censo</h5>
                     </div>
                     <div class="card-body">
                         <form class="" id="frmLogin" autocomplete="off">
@@ -36,6 +36,11 @@ function getView(){
                                 </button>
                             </div>
                         </form>
+                        <div class="row">
+                            <div align="right">
+                                <label class="text-warning">Versión 2.0</label>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

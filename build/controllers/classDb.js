@@ -17,7 +17,7 @@ window.onload = function () {
     initiateDb();
 };
 //nombre de la base de datos
-const DbName = "mercadosefectivoscenso";
+const DbName = "mercadosefectivoscensov2";
 
 function initiateDb() {
     
