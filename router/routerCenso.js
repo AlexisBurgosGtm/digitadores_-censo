@@ -79,7 +79,6 @@ router.post("/deletecliente", async(req,res)=>{
      
 });
 
-
 router.get("/municipios", async(req,res)=>{
 
     const{sucursal} = req.query;
@@ -99,7 +98,6 @@ router.get("/departamentos", async(req,res)=>{
      execute.Query(res,qry);
      
 });
-
 
 router.post("/verificar", async(req,res)=>{
 

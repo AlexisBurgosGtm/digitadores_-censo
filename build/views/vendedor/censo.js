@@ -25,7 +25,8 @@ function getView(){
                                         <label>Lista</label>
                                         <select class="form-control" id="cmbTipoLista">
                                             <option value="NOENVIADOS">SIN ENVIAR</option>
-                                            <option value="ENVIADOS">ENVIADOS</option>
+                                            <option value="PENDIENTES">PENDIENTES DE GENERAR</option>
+                                            <option value="ENVIADOS">CLIENTES GENERADOS</option>
                                             <option value="RESUMEN">RESUMEN</option>
                                         </select>
                                     </div>
@@ -227,6 +228,9 @@ async function addListeners(){
                 break;
             case 'ENVIADOS':
                 fcnCensoListado(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
+                break;
+            case 'PENDIENTES':
+                fcnCensoListadoPendientes(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
                 break;
             case 'RESUMEN':
                 fcnCensoResumen(GlobalCodSucursal, GlobalCodUsuario, cmbDiaVisita.value, 'listadoContainer');
@@ -750,16 +754,6 @@ function showUbicacion(){
         }
     })
 
-    
-
-    
-    
-    /**
-    L.marker([rows.LAT, rows.LONG])
-        .addTo(map)
-        .bindPopup(`${rows.VENDEDOR} - <br>Tel:${rows.TELEFONO} - Updated:${rows.HORAMIN} hrs`, {closeOnClick: false, autoClose: false})
-        .openPopup()   
-         */
 };
 
 function Lmap(lat,long){
@@ -851,30 +845,32 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
         const data = response.data.recordset;
         
         data.map((rows)=>{
+            if(rows.STATUS=='GENERADO'){
                 strdata = strdata + `<tr class="cursormano border-bottom">
-                    <td>${rows.NITCLIE}
+                <td>${rows.NITCLIE}
+                    <br>
+                    <small>Código: <b>${rows.CODCLIE}</b> </small>
+                </td>
+
+                <td>${rows.NOMCLIE}
                         <br>
-                        <small>Código: <b>${rows.CODCLIE}</b> </small>
-                    </td>
+                    <small><b>${rows.TIPONEGOCIO}-${rows.NEGOCIO}</b></small>
+                        <br class="border-bottom">
+                    <small>${rows.DIRCLIE},${rows.MUNICIPIO}</small>
+                </td>
+                <td>
+                    ${rows.TELEFONO}
+                </td>
+                <td>
+                    <button class="btn btn-warning btn-sm"
+                    onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}','SI')">
+                        <i class="fal fa-edit"></i>
+                        Edit
+                    </button>
+                </td>
 
-                    <td>${rows.NOMCLIE}
-                            <br>
-                        <small><b>${rows.TIPONEGOCIO}-${rows.NEGOCIO}</b></small>
-                            <br class="border-bottom">
-                        <small>${rows.DIRCLIE},${rows.MUNICIPIO}</small>
-                    </td>
-                    <td>
-                        ${rows.TELEFONO}
-                    </td>
-                    <td>
-                        <button class="btn btn-warning btn-sm"
-                        onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}','SI')">
-                            <i class="fal fa-edit"></i>
-                            Edit
-                        </button>
-                    </td>
-
-                </tr>`
+            </tr>`
+            }
         })
         /*
         <td>
@@ -897,6 +893,89 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
     });
 
 };
+
+
+function fcnCensoListadoPendientes(sucursal, codven, visita, idContainer){
+    let container = document.getElementById(idContainer);
+    container.innerHTML = GlobalLoader;
+    
+    let strdata = '';
+    let tbl = `<div class="table-responsive col-12">
+                <br>
+                <div class="form-group">
+                    <input type="text" class="form-control shadow" id="txtBuscar" placeholder="Escriba para buscar...">
+                </div>
+                <br>
+                    <table class="table table-responsive table-hover table-striped" id="tblCensoOnline">
+                        <thead class="bg-trans-gradient text-white">
+                            <tr>
+                                <td>Código/NIT</td>
+                                <td>Cliente/Dirección</td>
+                                <td>Teléfono</td>
+                            </tr>
+                        </thead>
+                        <tbody id="tblListado">`;
+
+    let tblfoot = `</tbody></table></div>`;
+
+    axios.post('/censo/listaclientes', {
+            sucursal: sucursal,
+            codven:codven,
+            visita:visita        
+    })
+    .then((response) => {
+        const data = response.data.recordset;
+        
+        data.map((rows)=>{
+            if(rows.STATUS=='PENDIENTE'){
+                strdata = strdata + `<tr class="cursormano border-bottom">
+                <td>${rows.NITCLIE}
+                    <br>
+                    <small>Código: <b>${rows.CODCLIE}</b> </small>
+                </td>
+
+                <td>${rows.NOMCLIE}
+                        <br>
+                    <small><b>${rows.TIPONEGOCIO}-${rows.NEGOCIO}</b></small>
+                        <br class="border-bottom">
+                    <small>${rows.DIRCLIE},${rows.MUNICIPIO}</small>
+                </td>
+                <td>
+                    ${rows.TELEFONO}
+                </td>
+                <td>
+                    <button class="btn btn-warning btn-sm"
+                    onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}','SI')">
+                        <i class="fal fa-edit"></i>
+                        Edit
+                    </button>
+                </td>
+
+            </tr>`
+            }
+        })
+        /*
+        <td>
+            <button class="btn btn-warning btn-sm btn-circle" onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}')">
+                <i class="fal fa-edit"></i>Edit
+            </button>
+        </td>
+        */
+       //dibuja la tabla
+        container.innerHTML = tbl + strdata + tblfoot;
+        
+        //asigna el listener al filtro
+        document.getElementById('txtBuscar').addEventListener('keyup',(e)=>{
+            funciones.crearBusquedaTabla('tblCensoOnline','txtBuscar');
+        })
+    }, (error) => {
+        funciones.AvisoError('No se puede obtener la lista de clientes');
+        strdata = '';
+        container.innerHTML = '';
+    });
+
+};
+
 
 function getComboMunicipios(idContainer){
     let contenedor = document.getElementById(idContainer);
