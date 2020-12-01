@@ -863,7 +863,7 @@ function fcnCensoListado(sucursal, codven, visita, idContainer){
                 </td>
                 <td>
                     <button class="btn btn-warning btn-sm"
-                    onclick="getDataCliente('${rows.CODCLIE}','${rows.NITCLIE}','${rows.TIPONEGOCIO}','${rows.NEGOCIO}','${rows.NOMCLIE}','${rows.DIRCLIE}','${rows.REFERENCIA}','${rows.CODMUN}','${rows.CODDEPTO}','${rows.OBS}','${rows.CODVEN}','${rows.VISITA}','${rows.LAT}','${rows.LONG}','${rows.TELEFONO}','SI')">
+                    onclick="alert('No se puede editar un Cliente ya generado, por favor, solicite el cambio en oficina')">
                         <i class="fal fa-edit"></i>
                         Edit
                     </button>
