@@ -1024,6 +1024,7 @@ let funciones = {
         <option value="MINISUPER">MINISUPER</option>
         <option value="SUPERMERCADO">SUPERMERCADO</option>
         <option value="RUTEROS">RUTEROS</option>
+        <option value="PASTELERIA">PASTELERIA</option>
         <option value="OTROS">OTROS</option>
       `
     }
