@@ -988,11 +988,7 @@ let funciones = {
     getComboSucursales: ()=>{
       let str = '';
       let data = [
-        {codsucursal:"ME-ZACAPA",nomsucursal:"BODEGA ZACAPA",color:"success"},
-        {codsucursal:"ME-IZABAL",nomsucursal:"BODEGA IZABAL",color:"primary"},
-        {codsucursal:"ME-JUTIAPA",nomsucursal:"BODEGA JUTIAPA",color:"info"},
-        {codsucursal:"ME-COBAN",nomsucursal:"BODEGA COBAN",color:"warning"},
-        {codsucursal:"ME-PETEN",nomsucursal:"BODEGA PETEN",color:"danger"},
+        {codsucursal:"DIST000",nomsucursal:"POPULAR",color:"success"}
       ];
 
       data.map((rows)=>{

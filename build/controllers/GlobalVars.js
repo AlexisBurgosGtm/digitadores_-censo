@@ -12,19 +12,19 @@ let lbTipo = document.getElementById('lbTipo');
 divUsuario.innerText = "DESCONECTADO";
 lbTipo.innerText = "Inicie sesión";
 
-let GlobalToken = 'MERCADOSEFECTIVOS';
+let GlobalToken = 'POPULAR';
 let GlobalCodSucursal = '';
 
 let GlobalCodUsuario = 99999;
-let GlobalUsuario = 'MERCADOSEFECTIVOS';
+let GlobalUsuario = 'ONNE';
 let GlobalNivelUser = 0;
 let GlobalTipoUsuario ='';
 let GlobalSelectedDia ='';
 let GlobalBool = false;
 let GlobalOnline = 'NO'; //SI o NO para indicar si estoy editando Online
 
-let GlobalEmpnit = '1034261-3';
-let GlobalEmpNombre = 'MERCADOS EFECTIVOS';
+let GlobalEmpnit = 'DIST000';
+let GlobalEmpNombre = 'POPULAR';
 let GlobalSelectedForm = '';
 
 let map; //mapa de leaflet
@@ -52,10 +52,10 @@ let GlobalSistema = 'ISC';
 
 let GlobalLoader = `
                 <div>
-                    <div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>
-                    <div class="spinner-grow text-info" role="status"><span class="sr-only">Loading...</span></div>
-                    <div class="spinner-grow text-danger" role="status"><span class="sr-only">Loading...</span></div>
-                    <div class="spinner-grow text-warning" role="status"><span class="sr-only">Loading...</span></div>
+                    <div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div>
+                    <div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div>
+                    <div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div>
+                    <div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div>
                 </div>
                 `
 
