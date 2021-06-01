@@ -539,6 +539,21 @@ let funciones = {
       let f = new Date(); 
       let d = f.getDate(); 
       let m = f.getUTCMonth()+1; 
+
+      switch (d.toString()) {
+        case '30':
+          m = f.getMonth()+1; 
+          break;
+        case '31':
+          m = f.getMonth()+1; 
+            break;
+      
+        default:
+
+          break;
+      }
+
+      
       let y = f.getFullYear();
      
       di = d;
